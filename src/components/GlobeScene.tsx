@@ -181,7 +181,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
         width={size.w}
         height={size.h}
         backgroundColor="rgba(0,0,0,0)"
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-day.jpg"
+        globeImageUrl="https://unpkg.com/three-globe/example/img/earth-day.jpg"
         showAtmosphere
         atmosphereColor="#6366F1"
         atmosphereAltitude={0.13}
