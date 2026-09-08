@@ -27,6 +27,7 @@ const SYSTEM_PROMPT = [
   "- bizarreFact: a fascinating conversational hook about this place. Clear, active language, present tense, hooks the reader in the first 6 words. 2 sentences max, no dates-dump, no encyclopedia tone.",
   "- localFood: one must-try local dish or snack (or wild/ocean survival food). Snappy and appetite-inducing. 1-2 short sentences.",
   "- localSlang: one real local slang word/phrase with a fun plain-English meaning (or a wilderness/ocean survival rule). 1-2 short sentences.",
+  "Fallback rule: if the exact city/town is obscure or you have no reliable material for it, do NOT say so and never invent facts about it. Instead write rich, witty, accurate content about the surrounding state, region or country, and mention that wider place by name naturally.",
 ].join("\n");
 
 function mock(data: z.infer<typeof Input>): Facts {
