@@ -217,9 +217,9 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                     </span>
                     <h2 className="text-xl font-semibold text-foreground">Did You Know?</h2>
                   </div>
-                  <p className="mt-4 text-sm leading-relaxed text-foreground">
-                    {loading ? <Shimmer text="Scanning local vibes…" /> : facts?.bizarreFact}
-                  </p>
+                  <div className="mt-4 text-sm leading-relaxed text-foreground">
+                    {loading ? <LoadingBlock label={loadingLabel} /> : facts?.bizarreFact}
+                  </div>
                 </section>
 
                 {/* Card 3 */}
@@ -235,17 +235,17 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                       <span className="text-[11px] font-semibold tracking-wide text-secondary uppercase">
                         🍜 Must try
                       </span>
-                      <p className="mt-1 text-sm text-foreground">
-                        {loading ? <Shimmer text="Scanning local vibes…" /> : facts?.localFood}
-                      </p>
+                      <div className="mt-1 text-sm text-foreground">
+                        {loading ? <LoadingBlock label={loadingLabel} lines={2} /> : facts?.localFood}
+                      </div>
                     </div>
                     <div className="rounded-2xl border border-border bg-background/70 p-3">
                       <span className="text-[11px] font-semibold tracking-wide text-primary uppercase">
                         🗣️ Local lingo
                       </span>
-                      <p className="mt-1 text-sm text-foreground">
-                        {loading ? <Shimmer text="Scanning local vibes…" /> : facts?.localSlang}
-                      </p>
+                      <div className="mt-1 text-sm text-foreground">
+                        {loading ? <LoadingBlock label={loadingLabel} lines={2} /> : facts?.localSlang}
+                      </div>
                     </div>
                   </div>
                 </section>
