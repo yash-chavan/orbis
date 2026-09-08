@@ -77,6 +77,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
   const [fahrenheit, setFahrenheit] = useState(false);
   const [swiped, setSwiped] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
+  const loadingLabel = useLoadingStep(loading);
 
   useEffect(() => {
     if (open) {
