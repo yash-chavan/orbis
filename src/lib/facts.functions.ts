@@ -18,9 +18,16 @@ export type Facts = {
   localSlang: string;
 };
 
-const SYSTEM_PROMPT =
-  "You are an unhinged, hilarious travel & exploration guide. Output strictly valid JSON with no markdown block wrappers matching this schema: " +
-  '{"vibeSummary":"2 short punchy sentences summarizing what standing here right now feels like based on the live weather.","bizarreFact":"1 jaw-dropping, lesser-known historical fact, geological anomaly, or strange trivia about this area.","localFood":"Must-try iconic local street food OR (if in wild/ocean) a famous local survival snack / native plant.","localSlang":"1 real local slang word/phrase OR (if in wild/ocean) a fun wilderness/survival rule."}';
+const SYSTEM_PROMPT = [
+  "You are a witty, casual travel companion. Never dramatic, never a textbook, never verbose.",
+  "Output strictly valid JSON, no markdown fences, matching this schema:",
+  '{"vibeSummary":"","bizarreFact":"","localFood":"","localSlang":""}',
+  "Field rules:",
+  "- vibeSummary: STRICTLY 1-2 punchy sentences about the live weather here right now. Witty, casual, relatable, like texting a friend. Max 35 words.",
+  "- bizarreFact: a fascinating conversational hook about this place. Clear, active language, present tense, hooks the reader in the first 6 words. 2 sentences max, no dates-dump, no encyclopedia tone.",
+  "- localFood: one must-try local dish or snack (or wild/ocean survival food). Snappy and appetite-inducing. 1-2 short sentences.",
+  "- localSlang: one real local slang word/phrase with a fun plain-English meaning (or a wilderness/ocean survival rule). 1-2 short sentences.",
+].join("\n");
 
 function mock(data: z.infer<typeof Input>): Facts {
   if (data.isOcean) {
@@ -56,31 +63,39 @@ function mock(data: z.infer<typeof Input>): Facts {
   };
 }
 
+async function callGemini(key: string, payload: unknown): Promise<string> {
+  const models = ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash"];
+  for (const model of models) {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{ role: "user", parts: [{ text: JSON.stringify(payload) }] }],
+          generationConfig: { temperature: 1, responseMimeType: "application/json" },
+        }),
+      },
+    );
+    if (!res.ok) continue;
+    const json = (await res.json()) as {
+      candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+    };
+    const text = json.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? "";
+    if (text.trim()) return text;
+  }
+  return "";
+}
+
 export const getFacts = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => Input.parse(d))
   .handler(async ({ data }): Promise<{ facts: Facts; source: "ai" | "fallback" }> => {
-    const key = process.env["LOVABLE_API_KEY"];
+    const key = process.env["GEMINI_API_KEY"];
     if (!key) return { facts: mock(data), source: "fallback" };
     try {
-      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Lovable-API-Key": key,
-        },
-        body: JSON.stringify({
-          model: "google/gemini-3.8-flash",
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            { role: "user", content: JSON.stringify(data) },
-          ],
-        }),
-      });
-      if (!res.ok) return { facts: mock(data), source: "fallback" };
-      const json = (await res.json()) as {
-        choices?: Array<{ message?: { content?: string } }>;
-      };
-      const raw = json.choices?.[0]?.message?.content ?? "";
+      const raw = await callGemini(key, data);
+      if (!raw) return { facts: mock(data), source: "fallback" };
       const cleaned = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
       const start = cleaned.indexOf("{");
       const end = cleaned.lastIndexOf("}");
