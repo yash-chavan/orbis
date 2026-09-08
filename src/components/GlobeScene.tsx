@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from "react";
 import Globe, { type GlobeMethods } from "react-globe.gl";
-import * as THREE from "three";
 
 export type GlobeHandle = {
   zoomOut: () => void;
+  surprise: () => void;
 };
 
 type Props = {
@@ -12,8 +12,38 @@ type Props = {
   locked: boolean;
 };
 
-const LAND_GREEN = "#86EFAC";
-const LAND_GRAY = "#CBD5E1";
+const LAND_SPOTS: Array<[number, number]> = [
+  [48.85, 2.35],
+  [35.68, 139.69],
+  [-33.87, 151.21],
+  [40.71, -74.01],
+  [-22.91, -43.17],
+  [19.08, 72.88],
+  [30.04, 31.24],
+  [-1.29, 36.82],
+  [55.75, 37.62],
+  [41.9, 12.5],
+  [37.77, -122.42],
+  [-34.6, -58.38],
+  [13.75, 100.5],
+  [64.15, -21.94],
+  [-26.2, 28.05],
+  [39.9, 116.4],
+  [59.33, 18.07],
+  [21.03, 105.85],
+  [-12.05, -77.04],
+  [45.42, -75.7],
+  [28.61, 77.21],
+  [-41.29, 174.78],
+  [52.52, 13.4],
+  [6.52, 3.38],
+  [33.59, -7.62],
+  [25.28, 55.3],
+  [-16.5, -68.15],
+  [43.65, -79.38],
+  [1.35, 103.82],
+  [-6.2, 106.85],
+];
 
 const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
   { onSettle, beacon, locked },
@@ -21,14 +51,31 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
 ) {
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const [size, setSize] = useState({ w: 800, h: 600 });
-  const [countries, setCountries] = useState<{ features: object[] }>({ features: [] });
   const interacted = useRef(false);
   const lockedRef = useRef(locked);
   lockedRef.current = locked;
+  const settleRef = useRef(onSettle);
+  settleRef.current = onSettle;
 
   useImperativeHandle(ref, () => ({
     zoomOut: () => {
       globeRef.current?.pointOfView({ altitude: 2.5 }, 1000);
+    },
+    surprise: () => {
+      const g = globeRef.current;
+      if (!g) return;
+      const pick = LAND_SPOTS[Math.floor(Math.random() * LAND_SPOTS.length)]!;
+      const jitterLat = pick[0] + (Math.random() - 0.5) * 1.2;
+      const jitterLng = pick[1] + (Math.random() - 0.5) * 1.2;
+      interacted.current = false;
+      g.pointOfView({ altitude: 2.5 }, 500);
+      window.setTimeout(() => {
+        globeRef.current?.pointOfView(
+          { lat: jitterLat, lng: jitterLng, altitude: 1.2 },
+          1600,
+        );
+      }, 450);
+      window.setTimeout(() => settleRef.current(jitterLat, jitterLng), 2100);
     },
   }));
 
@@ -39,14 +86,14 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // Freeze globe interaction while the drawer is open
   useEffect(() => {
-    fetch(
-      "https://raw.githubusercontent.com/vasturiano/globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson",
-    )
-      .then((r) => r.json())
-      .then((d) => setCountries(d as { features: object[] }))
-      .catch(() => undefined);
-  }, []);
+    const g = globeRef.current;
+    if (!g) return;
+    const c = g.controls() as unknown as { enableRotate: boolean; enableZoom: boolean };
+    c.enableRotate = !locked;
+    c.enableZoom = !locked;
+  }, [locked, size.w]);
 
   // Configure controls + detect motion settling
   useEffect(() => {
@@ -59,8 +106,6 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
       dynamicDampingFactor: number;
       enableZoom: boolean;
       rotateSpeed: number;
-      addEventListener: (t: string, cb: () => void) => void;
-      removeEventListener: (t: string, cb: () => void) => void;
     };
     controls.autoRotate = false;
     controls.enableDamping = true;
@@ -97,7 +142,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
           stillMs = 0;
           movingMs = 0;
           gg.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: 1.2 }, 900);
-          onSettle(pov.lat, pov.lng);
+          settleRef.current(pov.lat, pov.lng);
         }
       } else {
         stillMs = 0;
@@ -106,6 +151,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
     raf = requestAnimationFrame(tick);
 
     const onDown = () => {
+      if (lockedRef.current) return;
       pointerDown = true;
       interacted.current = true;
       stillMs = 0;
@@ -118,57 +164,42 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
     window.addEventListener("pointerdown", onDown);
     window.addEventListener("pointerup", onUp);
 
-
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("pointerdown", onDown);
       window.removeEventListener("pointerup", onUp);
     };
-
-  }, [onSettle, size.w]);
+  }, [size.w]);
 
   const ringsData = beacon ? [beacon] : [];
   const pointsData = beacon ? [beacon] : [];
 
   return (
-    <Globe
-      ref={globeRef as never}
-      width={size.w}
-      height={size.h}
-      backgroundColor="rgba(0,0,0,0)"
-      globeMaterial={
-        new THREE.MeshPhongMaterial({
-          color: new THREE.Color("#E0F2FE"),
-          shininess: 0,
-          specular: new THREE.Color("#0f172a"),
-        })
-      }
-      showAtmosphere
-      atmosphereColor="#6366F1"
-      atmosphereAltitude={0.13}
-
-      polygonsData={countries.features}
-      polygonCapColor={(d) => {
-        const id = JSON.stringify((d as { properties?: unknown }).properties ?? "").length;
-        return id % 3 === 0 ? LAND_GREEN : LAND_GRAY;
-      }}
-      polygonSideColor={() => "rgba(203,213,225,0.35)"}
-      polygonStrokeColor={() => "#E2E8F0"}
-      polygonAltitude={0.006}
-      pointsData={pointsData}
-      pointLat={(d) => (d as { lat: number }).lat}
-      pointLng={(d) => (d as { lng: number }).lng}
-      pointColor={() => "#6366F1"}
-      pointAltitude={0.03}
-      pointRadius={0.35}
-      ringsData={ringsData}
-      ringLat={(d) => (d as { lat: number }).lat}
-      ringLng={(d) => (d as { lng: number }).lng}
-      ringColor={() => (t: number) => `rgba(99,102,241,${1 - t})`}
-      ringMaxRadius={6}
-      ringPropagationSpeed={3}
-      ringRepeatPeriod={700}
-    />
+    <div className={locked ? "pointer-events-none h-full w-full" : "h-full w-full"}>
+      <Globe
+        ref={globeRef as never}
+        width={size.w}
+        height={size.h}
+        backgroundColor="rgba(0,0,0,0)"
+        globeImageUrl="//unpkg.com/three-globe/example/img/earth-day.jpg"
+        showAtmosphere
+        atmosphereColor="#6366F1"
+        atmosphereAltitude={0.13}
+        pointsData={pointsData}
+        pointLat={(d) => (d as { lat: number }).lat}
+        pointLng={(d) => (d as { lng: number }).lng}
+        pointColor={() => "#6366F1"}
+        pointAltitude={0.03}
+        pointRadius={0.35}
+        ringsData={ringsData}
+        ringLat={(d) => (d as { lat: number }).lat}
+        ringLng={(d) => (d as { lng: number }).lng}
+        ringColor={() => (t: number) => `rgba(99,102,241,${1 - t})`}
+        ringMaxRadius={6}
+        ringPropagationSpeed={3}
+        ringRepeatPeriod={700}
+      />
+    </div>
   );
 });
 
