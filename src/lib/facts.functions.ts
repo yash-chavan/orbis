@@ -65,7 +65,7 @@ function mock(data: z.infer<typeof Input>): Facts {
 }
 
 async function callGemini(key: string, payload: unknown): Promise<string> {
-  const models = ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash"];
+  const models = ["gemini-1.5-flash"];
   for (const model of models) {
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
