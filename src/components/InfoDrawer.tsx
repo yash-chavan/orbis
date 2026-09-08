@@ -203,9 +203,9 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                     </span>
                   </div>
 
-                  <p className="mt-4 text-sm leading-relaxed text-foreground">
-                    {loading ? <Shimmer text="Scanning local vibes…" /> : facts?.vibeSummary}
-                  </p>
+                  <div className="mt-4 text-sm leading-relaxed text-foreground">
+                    {loading ? <LoadingBlock label={loadingLabel} /> : facts?.vibeSummary}
+                  </div>
                 </section>
 
                 {/* Card 2 */}
