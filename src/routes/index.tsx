@@ -72,10 +72,23 @@ function Index() {
     [fetchFacts],
   );
 
-  const spinAgain = () => {
+  const resetView = () => {
+    reqId.current++;
     setOpen(false);
     setBeacon(null);
+    setFacts(null);
+    setSpot(null);
+    setLoading(false);
     globeRef.current?.zoomOut();
+  };
+
+  const spinAgain = () => {
+    resetView();
+  };
+
+  const surpriseMe = () => {
+    resetView();
+    globeRef.current?.surprise();
   };
 
   return (
