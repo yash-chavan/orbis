@@ -173,6 +173,32 @@
   animation: reticle-pulse 2.4s ease-in-out infinite;
 }
 
+@utility shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--muted-foreground) 0%,
+    var(--muted-foreground) 35%,
+    var(--primary) 50%,
+    var(--muted-foreground) 65%,
+    var(--muted-foreground) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-slide 1.8s linear infinite;
+}
+
+@keyframes shimmer-slide {
+  0% {
+    background-position: 140% 0;
+  }
+  100% {
+    background-position: -40% 0;
+  }
+}
+
+
 @keyframes reticle-pulse {
   0%,
   100% {
