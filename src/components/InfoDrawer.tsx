@@ -32,8 +32,44 @@ const MODE_STYLES = {
   },
 } as const;
 
-function Shimmer({ text }: { text: string }) {
-  return <span className="shimmer-text">{text}</span>;
+const LOADING_STEPS = [
+  "📡 Intercepting satellite weather…",
+  "💬 Asking locals for gossip…",
+  "✨ Crafting your local vibe…",
+];
+
+function useLoadingStep(active: boolean) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (!active) return;
+    setI(0);
+    const t = setInterval(() => setI((v) => (v + 1) % LOADING_STEPS.length), 700);
+    return () => clearInterval(t);
+  }, [active]);
+  return LOADING_STEPS[i]!;
+}
+
+function Skeleton({ lines = 3 }: { lines?: number }) {
+  return (
+    <div className="mt-1 space-y-2.5">
+      {Array.from({ length: lines }).map((_, i) => (
+        <div
+          key={i}
+          className="h-3.5 animate-pulse rounded-full bg-muted"
+          style={{ width: `${100 - i * 14}%`, animationDelay: `${i * 120}ms` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function LoadingBlock({ label, lines }: { label: string; lines?: number }) {
+  return (
+    <div>
+      <p className="shimmer-text text-sm font-medium">{label}</p>
+      <Skeleton lines={lines ?? 3} />
+    </div>
+  );
 }
 
 export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: Props) {
@@ -41,6 +77,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
   const [fahrenheit, setFahrenheit] = useState(false);
   const [swiped, setSwiped] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
+  const loadingLabel = useLoadingStep(loading);
 
   useEffect(() => {
     if (open) {
@@ -166,9 +203,9 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                     </span>
                   </div>
 
-                  <p className="mt-4 text-sm leading-relaxed text-foreground">
-                    {loading ? <Shimmer text="Scanning local vibes…" /> : facts?.vibeSummary}
-                  </p>
+                  <div className="mt-4 text-sm leading-relaxed text-foreground">
+                    {loading ? <LoadingBlock label={loadingLabel} /> : facts?.vibeSummary}
+                  </div>
                 </section>
 
                 {/* Card 2 */}
@@ -180,9 +217,9 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                     </span>
                     <h2 className="text-xl font-semibold text-foreground">Did You Know?</h2>
                   </div>
-                  <p className="mt-4 text-sm leading-relaxed text-foreground">
-                    {loading ? <Shimmer text="Scanning local vibes…" /> : facts?.bizarreFact}
-                  </p>
+                  <div className="mt-4 text-sm leading-relaxed text-foreground">
+                    {loading ? <LoadingBlock label={loadingLabel} /> : facts?.bizarreFact}
+                  </div>
                 </section>
 
                 {/* Card 3 */}
@@ -198,17 +235,17 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                       <span className="text-[11px] font-semibold tracking-wide text-secondary uppercase">
                         🍜 Must try
                       </span>
-                      <p className="mt-1 text-sm text-foreground">
-                        {loading ? <Shimmer text="Scanning local vibes…" /> : facts?.localFood}
-                      </p>
+                      <div className="mt-1 text-sm text-foreground">
+                        {loading ? <LoadingBlock label={loadingLabel} lines={2} /> : facts?.localFood}
+                      </div>
                     </div>
                     <div className="rounded-2xl border border-border bg-background/70 p-3">
                       <span className="text-[11px] font-semibold tracking-wide text-primary uppercase">
                         🗣️ Local lingo
                       </span>
-                      <p className="mt-1 text-sm text-foreground">
-                        {loading ? <Shimmer text="Scanning local vibes…" /> : facts?.localSlang}
-                      </p>
+                      <div className="mt-1 text-sm text-foreground">
+                        {loading ? <LoadingBlock label={loadingLabel} lines={2} /> : facts?.localSlang}
+                      </div>
                     </div>
                   </div>
                 </section>
