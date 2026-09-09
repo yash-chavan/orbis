@@ -90,9 +90,9 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
   useEffect(() => {
     const g = globeRef.current;
     if (!g) return;
-    const c = g.controls() as unknown as { enableRotate: boolean; enableZoom: boolean };
-    c.enableRotate = !locked;
-    c.enableZoom = !locked;
+      const c = g.controls() as unknown as { enableRotate: boolean; enableZoom: boolean };
+      c.enableRotate = false;
+      c.enableZoom = false;
   }, [locked, size.w]);
 
   // Configure controls + detect motion settling
@@ -101,18 +101,21 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
     if (!g) return;
     const controls = g.controls() as unknown as {
       autoRotate: boolean;
+      enableRotate: boolean;
       enableDamping: boolean;
       dampingFactor: number;
       dynamicDampingFactor: number;
       enableZoom: boolean;
       rotateSpeed: number;
     };
-    controls.autoRotate = false;
+    controls.autoRotate = true;
+    (controls as { autoRotateSpeed?: number }).autoRotateSpeed = 0.15;
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.dynamicDampingFactor = 0.12;
-    controls.enableZoom = true;
+    controls.enableZoom = false;
     controls.rotateSpeed = 0.9;
+    controls.enableRotate = false;
 
     let last = g.pointOfView();
     let lastT = performance.now();
@@ -175,7 +178,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
   const pointsData = beacon ? [beacon] : [];
 
   return (
-    <div className={locked ? "pointer-events-none h-full w-full" : "h-full w-full"}>
+    <div className="pointer-events-none h-full w-full">
       <Globe
         ref={globeRef as never}
         width={size.w}
