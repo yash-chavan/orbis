@@ -117,18 +117,18 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
         backgroundColor="rgba(0,0,0,0)"
         globeImageUrl="https://unpkg.com/three-globe/example/img/earth-day.jpg"
         showAtmosphere
-        atmosphereColor="#6366F1"
+        atmosphereColor="#8B5CF6"
         atmosphereAltitude={0.13}
         pointsData={pointsData}
         pointLat={(d) => (d as { lat: number }).lat}
         pointLng={(d) => (d as { lng: number }).lng}
-        pointColor={() => "#6366F1"}
+        pointColor={() => "#8B5CF6"}
         pointAltitude={0.03}
         pointRadius={0.35}
         ringsData={ringsData}
         ringLat={(d) => (d as { lat: number }).lat}
         ringLng={(d) => (d as { lng: number }).lng}
-        ringColor={() => (t: number) => `rgba(99,102,241,${1 - t})`}
+        ringColor={() => (t: number) => `rgba(139,92,246,${1 - t})`}
         ringMaxRadius={6}
         ringPropagationSpeed={3}
         ringRepeatPeriod={700}

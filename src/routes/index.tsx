@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ClientOnly } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Suspense, lazy, useCallback, useRef, useState } from "react";
+import { Compass } from "lucide-react";
 import InfoDrawer from "@/components/InfoDrawer";
 import type { GlobeHandle } from "@/components/GlobeScene";
 import { Button } from "@/components/ui/button";
@@ -94,7 +95,7 @@ function Index() {
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-background">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,color-mix(in_oklab,var(--primary)_10%,transparent),transparent_65%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_62%)]" />
 
       <div className="absolute inset-0">
         <ClientOnly fallback={<GlobeFallback />}>
@@ -104,11 +105,13 @@ function Index() {
         </ClientOnly>
       </div>
 
+      <div className="viewport-vignette pointer-events-none absolute inset-0 z-[5]" />
+
       {/* Centered title & tagline */}
-      <header className="pointer-events-none absolute inset-x-0 top-0 z-40 flex justify-center px-5 pt-6 text-center sm:pt-10">
-        <div className="rounded-3xl border border-glass bg-card/76 px-7 py-4 shadow-glass backdrop-blur-glass sm:px-10 sm:py-5">
-          <h1 className="text-4xl font-bold leading-none text-foreground drop-shadow-sm sm:text-5xl">Orbis</h1>
-          <p className="mt-2 max-w-md text-sm font-medium leading-relaxed text-muted-foreground sm:text-base">
+      <header className="pointer-events-none absolute inset-x-0 top-0 z-40 flex justify-center px-5 pt-7 text-center sm:pt-10">
+        <div className="rounded-full border border-glass bg-header-glass px-7 py-3 shadow-glass backdrop-blur-glass sm:px-9">
+          <h1 className="text-2xl font-bold leading-none text-foreground sm:text-3xl">Orbis</h1>
+          <p className="mt-1.5 max-w-md text-xs font-normal leading-relaxed text-muted-foreground sm:text-sm">
             Earth is weird. Let&rsquo;s explore it.
           </p>
         </div>
@@ -120,8 +123,9 @@ function Index() {
           <Button
             onClick={surpriseMe}
             size="lg"
-            className="h-14 rounded-full border border-glass px-8 text-base font-semibold shadow-glass transition duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] sm:px-10"
+            className="h-14 rounded-full border border-primary/60 px-8 text-base font-semibold shadow-glow transition duration-300 hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0 active:scale-[0.98] sm:px-10"
           >
+            <Compass className="size-5 drop-shadow-sm" aria-hidden="true" />
             Find a Destination
           </Button>
         </div>
@@ -141,7 +145,7 @@ function Index() {
       </div>
 
       {loading && !open && (
-        <div className="pointer-events-none absolute bottom-8 left-1/2 z-20 -translate-x-1/2 rounded-full border border-glass bg-card/80 px-4 py-2 text-xs text-muted-foreground shadow-glass backdrop-blur-glass">
+        <div className="pointer-events-none absolute bottom-8 left-1/2 z-20 -translate-x-1/2 rounded-full border border-glass bg-card px-4 py-2 text-xs text-muted-foreground shadow-glass backdrop-blur-glass">
           Locking coordinates…
         </div>
       )}
