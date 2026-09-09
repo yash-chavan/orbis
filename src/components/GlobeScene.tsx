@@ -59,7 +59,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
 
   useImperativeHandle(ref, () => ({
     zoomOut: () => {
-      globeRef.current?.pointOfView({ altitude: 2.5 }, 1000);
+      globeRef.current?.pointOfView({ altitude: 1.8 }, 1000);
     },
     surprise: () => {
       const g = globeRef.current;
@@ -68,7 +68,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
       const jitterLat = pick[0] + (Math.random() - 0.5) * 1.2;
       const jitterLng = pick[1] + (Math.random() - 0.5) * 1.2;
       interacted.current = false;
-      g.pointOfView({ altitude: 2.5 }, 500);
+      g.pointOfView({ altitude: 1.8 }, 500);
       window.setTimeout(() => {
         globeRef.current?.pointOfView(
           { lat: jitterLat, lng: jitterLng, altitude: 1.2 },
@@ -183,6 +183,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
         ref={globeRef as never}
         width={size.w}
         height={size.h}
+        onGlobeReady={() => globeRef.current?.pointOfView({ altitude: 1.8 }, 0)}
         backgroundColor="rgba(0,0,0,0)"
         globeImageUrl="https://unpkg.com/three-globe/example/img/earth-day.jpg"
         showAtmosphere
