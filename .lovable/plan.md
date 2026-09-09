@@ -2,13 +2,11 @@
 
 ## What's wrong
 
-The app asks Google for a model called `gemini-1.5-flash`. Your key no longer has that model — I listed the models your key can actually use and 1.5-flash is not among them. Google answers 404, the app quietly gives up, and you see the built-in backup copy for "Mind-Blower" and "Culture & Palate".
-
-Models your key does have include `gemini-2.5-flash`, `gemini-3.6-flash`, and `gemini-3.8-flash`.
+The app asks Google for a model called `gemini-1.5-flash`. Your key no longer has that model, so Google answers 404, the app quietly gives up, and you see the built-in backup copy for "Mind-Blower" and "Culture & Palate".
 
 ## Fix
 
-1. Switch the fact request to `gemini-2.5-flash`, with `gemini-3.6-flash` as a second try if the first one is refused.
+1. Switch the fact request to a single model: `gemini-2.5-flash-lite`. No fallback chain.
 2. When Google refuses a request, record the status and message in the server log so a future failure is visible instead of silent.
 3. Keep the backup copy exactly as-is; it should only appear on a genuine outage.
 
@@ -18,8 +16,8 @@ Your key is already saved and working — no new key, no dashboard change.
 
 ## Technical notes
 
-- `src/lib/facts.functions.ts`: change `const models = ["gemini-1.5-flash"]` to `["gemini-2.5-flash", "gemini-3.6-flash"]`.
-- In `callGemini`, on a non-OK response read the body and `console.error` the model, status, and message before trying the next model.
+- `src/lib/facts.functions.ts`: change `const models = ["gemini-1.5-flash"]` to `["gemini-2.5-flash-lite"]`.
+- In `callGemini`, on a non-OK response read the body and `console.error` the model, status, and message before falling back.
 
 ## Verification
 

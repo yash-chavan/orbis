@@ -65,7 +65,7 @@ function mock(data: z.infer<typeof Input>): Facts {
 }
 
 async function callGemini(key: string, payload: unknown): Promise<string> {
-  const models = ["gemini-1.5-flash"];
+  const models = ["gemini-2.5-flash-lite"];
   for (const model of models) {
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
@@ -79,7 +79,11 @@ async function callGemini(key: string, payload: unknown): Promise<string> {
         }),
       },
     );
-    if (!res.ok) continue;
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error(`Gemini ${model} failed: ${res.status} ${res.statusText} — ${body.slice(0, 500)}`);
+      continue;
+    }
     const json = (await res.json()) as {
       candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
     };
