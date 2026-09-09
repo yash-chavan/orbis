@@ -53,14 +53,30 @@ function mock(data: z.infer<typeof Input>): Facts {
         "Wilderness rule of threes: three minutes without air, three days without water, three weeks without food.",
     };
   }
+  const pick = <T,>(pool: T[]): T => pool[Math.floor(Math.random() * pool.length)]!;
   return {
     vibeSummary: `${data.city ?? "This spot"} is running ${Math.round(data.temperature)}°C and ${data.weatherCondition.toLowerCase()} right now. Perfect weather for pretending you meant to end up here.`,
-    bizarreFact:
+    bizarreFact: pick([
       "Every city hides at least one abandoned tunnel that officials insist does not exist — and locals will happily point you to the entrance.",
-    localFood:
+      "Every old neighborhood guards an unspoken secret route that doesn't appear on any modern map.",
+      "Beneath the pavement lies a network of forgotten basements and hidden passageways left over from a completely different era.",
+      "If you ask three different locals for the oldest rumor in town, you will hear three versions of the exact same subterranean mystery.",
+      "Every corner of this city hides an off-limits rooftop or underground alley known strictly to urban explorers.",
+    ]),
+    localFood: pick([
       "Follow the longest queue of locals at the busiest street cart. That queue is never wrong.",
-    localSlang:
+      "The best meal in town is rarely served on a ceramic plate — look for a plastic stool and a steaming grill.",
+      "If a small family-run diner has handwritten menus and no open tables, wait in line. It's worth it.",
+      "Skip the tourist hubs; find where the morning delivery drivers buy their coffee and breakfast.",
+      "Rule of thumb: if the vendor has been making just one specific dish for 30 years, order it immediately.",
+    ]),
+    localSlang: pick([
       "Learn 'thank you' in the local tongue first — it unlocks smiles, directions, and occasionally free food.",
+      "A respectful nod and a warm attempt at the local greeting will get you much further than standard English ever could.",
+      "Always observe how the locals hand over cash or cards — mirroring small gestures builds instant rapport.",
+      "Master the universal language of pointing enthusiastically and smiling; it bridges almost every communication gap.",
+      "A simple attempt to speak the native language shows respect that locals appreciate far more than perfect grammar.",
+    ]),
   };
 }
 
