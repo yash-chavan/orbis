@@ -9,7 +9,6 @@ export type GlobeHandle = {
 type Props = {
   onSettle: (lat: number, lng: number) => void;
   beacon: { lat: number; lng: number } | null;
-  locked: boolean;
 };
 
 const LAND_SPOTS: Array<[number, number]> = [
@@ -46,14 +45,11 @@ const LAND_SPOTS: Array<[number, number]> = [
 ];
 
 const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
-  { onSettle, beacon, locked },
+  { onSettle, beacon },
   ref,
 ) {
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const [size, setSize] = useState({ w: 800, h: 600 });
-  const interacted = useRef(false);
-  const lockedRef = useRef(locked);
-  lockedRef.current = locked;
   const settleRef = useRef(onSettle);
   settleRef.current = onSettle;
 
@@ -67,7 +63,6 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
       const pick = LAND_SPOTS[Math.floor(Math.random() * LAND_SPOTS.length)]!;
       const jitterLat = pick[0] + (Math.random() - 0.5) * 1.2;
       const jitterLng = pick[1] + (Math.random() - 0.5) * 1.2;
-      interacted.current = false;
       g.pointOfView({ altitude: 1.8 }, 500);
       window.setTimeout(() => {
         globeRef.current?.pointOfView(
@@ -86,16 +81,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // Freeze globe interaction while the drawer is open
-  useEffect(() => {
-    const g = globeRef.current;
-    if (!g) return;
-      const c = g.controls() as unknown as { enableRotate: boolean; enableZoom: boolean };
-      c.enableRotate = false;
-      c.enableZoom = false;
-  }, [locked, size.w]);
-
-  // Configure controls + detect motion settling
+  // The globe is display-only. Destination selection is exclusively driven by surprise().
   useEffect(() => {
     const g = globeRef.current;
     if (!g) return;
@@ -116,62 +102,6 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
     controls.enableZoom = false;
     controls.rotateSpeed = 0.9;
     controls.enableRotate = false;
-
-    let last = g.pointOfView();
-    let lastT = performance.now();
-    let stillMs = 0;
-    let movingMs = 0;
-    let raf = 0;
-    let pointerDown = false;
-
-    const tick = () => {
-      raf = requestAnimationFrame(tick);
-      const gg = globeRef.current;
-      if (!gg) return;
-      const now = performance.now();
-      const dt = Math.max(now - lastT, 1);
-      lastT = now;
-      const pov = gg.pointOfView();
-      const d = Math.abs(pov.lat - last.lat) + Math.abs(pov.lng - last.lng);
-      last = pov;
-      if (lockedRef.current) return;
-      const degPerSec = (d / dt) * 1000;
-      if (!interacted.current || pointerDown) return;
-      if (degPerSec > 4) movingMs += dt;
-      if (degPerSec < 3.5) {
-        stillMs += dt;
-        if (stillMs > 350 || movingMs > 9000) {
-          interacted.current = false;
-          stillMs = 0;
-          movingMs = 0;
-          gg.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: 1.2 }, 900);
-          settleRef.current(pov.lat, pov.lng);
-        }
-      } else {
-        stillMs = 0;
-      }
-    };
-    raf = requestAnimationFrame(tick);
-
-    const onDown = () => {
-      if (lockedRef.current) return;
-      pointerDown = true;
-      interacted.current = true;
-      stillMs = 0;
-      movingMs = 0;
-    };
-    const onUp = () => {
-      pointerDown = false;
-      stillMs = 0;
-    };
-    window.addEventListener("pointerdown", onDown);
-    window.addEventListener("pointerup", onUp);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("pointerdown", onDown);
-      window.removeEventListener("pointerup", onUp);
-    };
   }, [size.w]);
 
   const ringsData = beacon ? [beacon] : [];

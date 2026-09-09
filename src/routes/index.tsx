@@ -13,17 +13,17 @@ const GlobeScene = lazy(() => import("@/components/GlobeScene"));
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Orbis — Flick the Globe, Discover the Planet" },
+      { title: "Orbis — Discover a Random Destination" },
       {
         name: "description",
         content:
-          "Spin an interactive 3D globe, drop a pin anywhere on Earth and get live weather, bizarre local facts, street food and slang.",
+          "Tap once to discover a random destination with live weather, surprising local facts, food and slang.",
       },
-      { property: "og:title", content: "Orbis — Flick the Globe, Discover the Planet" },
+      { property: "og:title", content: "Orbis — Discover a Random Destination" },
       {
         property: "og:description",
         content:
-          "Drag and flick a 3D Earth to land on a random spot, then unlock live weather and wildly fun local facts.",
+          "Tap once to land somewhere unexpected, then unlock live weather and wildly fun local facts.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -99,16 +99,16 @@ function Index() {
       <div className="absolute inset-0">
         <ClientOnly fallback={<GlobeFallback />}>
           <Suspense fallback={<GlobeFallback />}>
-            <GlobeScene ref={globeRef} onSettle={handleSettle} beacon={beacon} locked={open} />
+            <GlobeScene ref={globeRef} onSettle={handleSettle} beacon={beacon} />
           </Suspense>
         </ClientOnly>
       </div>
 
       {/* Centered title & tagline */}
       <header className="pointer-events-none absolute inset-x-0 top-0 z-40 flex justify-center px-5 pt-6 text-center sm:pt-10">
-        <div className="rounded-[1.75rem] border border-card/80 bg-card/68 px-7 py-4 shadow-glass backdrop-blur-xl sm:px-10 sm:py-5">
-          <h1 className="text-4xl font-bold text-foreground drop-shadow-sm sm:text-5xl">Orbis</h1>
-          <p className="mt-1.5 max-w-md text-sm font-medium text-muted-foreground sm:text-base">
+        <div className="rounded-3xl border border-glass bg-card/76 px-7 py-4 shadow-glass backdrop-blur-glass sm:px-10 sm:py-5">
+          <h1 className="text-4xl font-bold leading-none tracking-tight text-foreground drop-shadow-sm sm:text-5xl">Orbis</h1>
+          <p className="mt-2 max-w-md text-sm font-medium leading-relaxed text-muted-foreground sm:text-base">
             Earth is weird. Let&rsquo;s explore it.
           </p>
         </div>
@@ -120,7 +120,7 @@ function Index() {
           <Button
             onClick={surpriseMe}
             size="lg"
-            className="h-14 rounded-full px-8 text-base font-semibold shadow-glow transition duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] sm:px-10"
+            className="h-14 rounded-full border border-glass px-8 text-base font-semibold shadow-glass transition duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] sm:px-10"
           >
             Find a Destination
           </Button>
@@ -141,7 +141,7 @@ function Index() {
       </div>
 
       {loading && !open && (
-        <div className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 rounded-full border border-border bg-card/80 px-4 py-2 text-xs text-muted-foreground backdrop-blur-md">
+        <div className="pointer-events-none absolute bottom-8 left-1/2 z-20 -translate-x-1/2 rounded-full border border-glass bg-card/80 px-4 py-2 text-xs text-muted-foreground shadow-glass backdrop-blur-glass">
           Locking coordinates…
         </div>
       )}
