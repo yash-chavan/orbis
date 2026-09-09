@@ -109,7 +109,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
       rotateSpeed: number;
     };
     controls.autoRotate = true;
-    (controls as { autoRotateSpeed?: number }).autoRotateSpeed = 0.15;
+    (controls as { autoRotateSpeed?: number }).autoRotateSpeed = 0.28;
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.dynamicDampingFactor = 0.12;
