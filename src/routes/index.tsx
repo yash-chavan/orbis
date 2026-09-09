@@ -109,7 +109,7 @@ function Index() {
 
       {/* Centered title & tagline */}
       <header className="pointer-events-none absolute inset-x-0 top-0 z-40 flex justify-center px-5 pt-7 text-center sm:pt-10">
-        <div className="rounded-full border border-glass bg-header-glass px-7 py-3 shadow-glass backdrop-blur-glass sm:px-9">
+        <div className="rounded-3xl border border-glass bg-header-glass px-7 py-[18px] shadow-glass backdrop-blur-glass sm:px-9">
           <h1 className="text-2xl font-bold leading-none text-foreground sm:text-3xl">Orbis</h1>
           <p className="mt-1.5 max-w-md text-xs font-normal leading-relaxed text-muted-foreground sm:text-sm">
             Earth is weird. Let&rsquo;s explore it.
