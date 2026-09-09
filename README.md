@@ -1,78 +1,53 @@
-# Orbis
+# 🌍 Orbis — Random World Facts on a 3D Globe
 
-Build a production-grade React application called "Orbis" using a clean LIGHT THEME.
+Orbis is a web app built by [Yash Chavan](https://www.linkedin.com/in/yash-chavan/) that lets you spin a 3D Earth, land on a random spot, and explore live weather alongside local facts.
 
-1. COLOR PALETTE & STYLING RULES:
-- Primary Background: #F8FAFC (Soft slate-white, clean & airy)
-- Card / Modal Surface: #FFFFFF with 80% opacity backdrop-blur-md (Glassmorphism)
-- Oceans & Water: #E0F2FE (Soft sky blue, light & crisp)
-- Landmasses: #CBD5E1 (Slate gray) with pastel green highlights (#86EFAC)
-- Primary Accent / CTA: #6366F1 (Electric Indigo)
-- Secondary Accent: #10B981 (Emerald Green - for temperature badges & live status)
-- Dark Text: #0F172A (Deep navy slate - never pure black)
-- Subtle Borders: #E2E8F0 (Soft light gray dividers)
+I built this project to get hands-on experience orchestrating multiple third-party APIs and using an LLM to generate structured context on the fly. 
 
-2. VISUAL THEME & LAYOUT:
-- Top Header: Minimal floating glassmorphism pill showing "Orbis 🌍" on the left and an instruction badge "👆 Drag & flick the globe to discover" on the right.
-- Theme accent: Modern electric violet (#6366F1) for active triggers, badges, and card styling.
+Prototyped and built using Lovable, with the system architecture, multi-API pipelines, and LLM prompt logic designed and implemented by me.
 
-3. INTERACTIVE 3D GLOBE ENGINE:
-- Full-screen interactive 3D Globe using `react-globe.gl` or `@three-js`.
-- USER INTERACTION: Users directly drag/flick the globe with physics momentum.
-- Center-screen subtle reticle/crosshair target overlay (`fixed inset-0 pointer-events-none`).
-- DECELERATION LOGIC: When globe dragging stops completely (velocity hits 0), record the exact lat/long coordinate under the center crosshair.
-- ANIMATION: Trigger a subtle 1.2x camera micro-zoom toward the point and spawn a pulsing glowing beacon marker at those coordinates.
+---
 
-4. DATA FETCHING (FREE APIS):
-- Fetch live weather using keyless Open-Meteo:
-  `https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lng}&current_weather=true`
-- Reverse geocode location via `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude={lat}&longitude={lng}&localityLanguage=en` or REST Countries API to get City, Country, and Country Code (for Flag SVG).
+## 🎯 Why I Built This
 
-5. GEMINI LLM AGENT FACT ENGINE:
-- Call Google Gemini API (`gemini-1.5-flash` or `gemini-2.5-flash`) using `process.env.GEMINI_API_KEY`.
-- Pass payload: `{ city, country, temperature, weatherCondition, localTime, isWilderness, isOcean }`.
-- System Prompt: "You are an unhinged, hilarious travel & exploration guide. Output strictly valid JSON with no markdown block wrappers matching this schema:"
-  {
-    "vibeSummary": "2 short punchy sentences summarizing what standing here right now feels like based on the live weather.",
-    "bizarreFact": "1 jaw-dropping, lesser-known historical fact, geological anomaly, or strange trivia about this area.",
-    "localFood": "Must-try iconic local street food OR (if in wild/ocean) a famous local survival snack / native plant.",
-    "localSlang": "1 real local slang word/phrase OR (if in wild/ocean) a fun wilderness/survival rule."
-  }
-- Fallback/Error state: If API key is missing or call fails, serve pre-baked humorous mock JSON facts so the app never breaks.
-- DYNAMIC MODES BASED ON GEOLOCATION:
-  - CITY MODE: Standard urban vibe, street food, and city slang.
-  - WILDERNESS MODE (if city is null/remote): Change card styling to Earthy Emerald, display Lat/Long + Biome Title, and provide wildlife/geography facts.
-  - OCEAN MODE (if in water): Change card styling to Deep Azure, display "Deep Sea Expedition Mode", ocean trench facts, marine biology secrets, or shipwreck tales.
+As a Product Manager, I wanted to go beyond high-level PRDs and actually build a project that handles real-time data orchestration and LLM integrations. 
 
-6. SWIPEABLE 3-CARD CAROUSEL UI:
-- Slide up a bottom glassmorphism modal (`framer-motion` sliding drawer).
-- Horizontal swipeable carousel with progress dots (Card 1 of 3, 2 of 3, 3 of 3):
-  - CARD 1 ("The Vibe Check"): Location/Biome Name, Flag/Icon, Live Temp (°C/°F toggle switch), Weather Icon, Local Time, and `vibeSummary`.
-  - CARD 2 ("Mind-Blower"): "Did You Know?" header + `bizarreFact` text + glowing icon.
-  - CARD 3 ("Culture & Palate / Wild Explorer"): `localFood` recommendation badge + `localSlang` badge.
+My main goals were to:
+* **Manage Multi-API Pipelines:** Fetch live weather, geocoding, and map graphics in parallel without making the UI feel sluggish.
+* **Work with Structured LLM Outputs:** Prompt an AI model to take dynamic context (city name, current weather, time of day) and return strict JSON to populate fixed UI cards.
+* **Handle Edge Cases Gracefully:** Design fallback mechanisms for missing data, API failures, ocean/wilderness landings, and obscure towns.
 
-7. END-OF-STACK ACTION CONTROLS:
-- On reaching or completing Card 3, display two action buttons at the base:
-  - Primary Accent Button (#6366F1): "🌀 Spin for a New Vibe" (Closes modal, zooms out camera to global view, ready for next flick).
-  - Secondary Outline Button: "📜 Relive This Spot" (Snaps carousel back to Card 1).
+---
 
-This project was built with [Lovable](https://lovable.dev).
+## 🏗️ How It Works & Architecture
 
-## Build with Lovable
+![Orbis Architecture](./orbis_architecture.png)
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/f45a9511-e7a0-4c98-9300-7c573d09f34d).
+1. **Target Selection:** Tapping "Find a Destination" picks a random land coordinate from a curated list of 30 global locations, animates the globe camera, and triggers data fetching once settled.
+2. **Live Data Fetching (Client):** 
+   * Fetches real-time temperature, weather codes, and time offsets from **Open-Meteo**.
+   * Converts lat/long coordinates into a city and country using **BigDataCloud**, falling back to **Nominatim (OpenStreetMap)** if BigDataCloud rate limits.
+   * If you land in the middle of nowhere (ocean or uninhabited land), local logic calculates the biome based on latitude (Polar, Taiga, Desert, Tropical, etc.) to trigger relevant generic copy.
+3. **AI Fact Generation (Server):** 
+   * Sends location and weather data to **Google Gemini 3.5 Flash Lite** via a TanStack server function (so the API key stays hidden from the browser).
+   * Gemini returns a strictly validated JSON payload (`vibeSummary`, `bizarreFact`, `localFood`, `localSlang`) in a casual, witty tone.
+   * If Gemini fails or returns an empty key, a local backup engine picks from a 5-item randomized fallback pool per category so the user never sees a broken card.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+---
 
-## Development
+## 🛠️ Tech Stack
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+* **AI Builder:** Lovable
+* **Frontend Framework:** React 19, TanStack Start v1 (Vite, SSR, Server Functions)
+* **3D Globe:** `react-globe.gl`, `three-globe`, Three.js
+* **AI Model:** Google Gemini API (`gemini-3.5-flash-lite`)
+* **APIs & Services:** Open-Meteo (Weather), BigDataCloud & Nominatim (Geocoding), FlagCDN (Country flags)
+* **Styling & Validation:** Tailwind CSS v4, Zod schema validation
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+---
+
+## 💡 Security, Latency & Reliability
+
+* **Server Functions for Security:** Kept the Gemini API key completely server-side on Vercel using TanStack server functions (`createServerFn`) rather than calling Gemini directly from the client.
+* **Cost vs. Latency for LLMs:** Used `gemini-3.5-flash-lite` because it is fast enough to keep the UI snappy while costing fractions of a cent per request.
+* **Designing for API Resilience:** Free geocoding APIs frequently throw rate-limit errors (402/403). Adding a primary-to-fallback geocoding pipeline and local fallback copy ensured the app never crashes or displays empty states.
