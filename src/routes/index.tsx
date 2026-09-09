@@ -109,7 +109,7 @@ function Index() {
 
       {/* Centered title & tagline */}
       <header className="pointer-events-none absolute inset-x-0 top-0 z-40 flex justify-center px-5 pt-7 text-center sm:pt-10">
-        <div className="rounded-full border border-glass bg-header-glass px-7 py-3 shadow-glass backdrop-blur-glass sm:px-9">
+        <div className="rounded-3xl border border-glass bg-header-glass px-7 py-[18px] shadow-glass backdrop-blur-glass sm:px-9">
           <h1 className="text-2xl font-bold leading-none text-foreground sm:text-3xl">Orbis</h1>
           <p className="mt-1.5 max-w-md text-xs font-normal leading-relaxed text-muted-foreground sm:text-sm">
             Earth is weird. Let&rsquo;s explore it.
@@ -131,16 +131,12 @@ function Index() {
         </div>
       )}
 
-      {/* Reticle */}
+      {/* Center target indicator */}
       <div className="pointer-events-none fixed inset-0 z-10 grid place-items-center">
-        <div className="reticle-pulse relative h-24 w-24">
-          <div className="absolute inset-0 rounded-full border border-primary/40" />
-          <div className="absolute inset-6 rounded-full border border-primary/25" />
-          <div className="absolute top-1/2 left-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary" />
-          <div className="absolute top-1/2 left-0 h-px w-4 bg-primary/50" />
-          <div className="absolute top-1/2 right-0 h-px w-4 bg-primary/50" />
-          <div className="absolute top-0 left-1/2 h-4 w-px bg-primary/50" />
-          <div className="absolute bottom-0 left-1/2 h-4 w-px bg-primary/50" />
+        <div className="relative flex h-20 w-20 items-center justify-center">
+          <span className="target-sonar absolute inset-0 rounded-full" aria-hidden="true" />
+          <span className="absolute h-6 w-6 rounded-full bg-black/60 blur-md" aria-hidden="true" />
+          <span className="shadow-target relative h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />
         </div>
       </div>
 
