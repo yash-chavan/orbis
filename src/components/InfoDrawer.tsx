@@ -113,7 +113,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
           className="fixed inset-x-0 bottom-0 z-30 px-3 pb-3 sm:px-6 sm:pb-6"
         >
           <div
-            className={`mx-auto w-full max-w-2xl overflow-hidden rounded-3xl border border-glass bg-card/86 shadow-glass ring-1 backdrop-blur-glass ${style.ring}`}
+            className={`mx-auto w-full max-w-2xl overflow-hidden rounded-3xl border border-glass bg-card shadow-glass ring-1 backdrop-blur-glass ${style.ring}`}
           >
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-5 pt-4">
               <span
@@ -131,7 +131,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                 onClick={onSpinAgain}
                 aria-label="Close destination and return home"
                 title="Return home"
-                 className="ml-auto h-9 w-9 rounded-full border border-glass bg-background/70 text-muted-foreground shadow-sm backdrop-blur-glass hover:bg-background hover:text-foreground"
+                 className="ml-auto h-9 w-9 rounded-full border border-glass bg-muted text-muted-foreground shadow-sm backdrop-blur-glass hover:bg-accent hover:text-foreground"
               >
                 <X aria-hidden="true" />
               </Button>
@@ -189,7 +189,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/12 px-3 py-1.5 text-sm font-semibold text-secondary">
                       {temp.toFixed(1)}°{fahrenheit ? "F" : "C"}
                     </span>
-                    <div className="inline-flex items-center rounded-full border border-border bg-muted/60 p-0.5">
+                    <div className="inline-flex items-center rounded-full border border-border bg-muted p-0.5">
                       {(["C", "F"] as const).map((u) => {
                         const active = (u === "F") === fahrenheit;
                         return (
@@ -246,7 +246,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                     {spot.mode === "city" ? "Eat this, say that" : "Survive & speak"}
                   </h2>
                   <div className="mt-4 space-y-3">
-                    <div className="rounded-2xl border border-border bg-background/70 p-3">
+                     <div className="rounded-2xl border border-border bg-muted p-3">
                       <span className="text-[11px] font-semibold tracking-wide text-secondary uppercase">
                         🍜 Must try
                       </span>
@@ -254,7 +254,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                         {loading ? <LoadingBlock label={loadingLabel} lines={2} /> : facts?.localFood}
                       </div>
                     </div>
-                    <div className="rounded-2xl border border-border bg-background/70 p-3">
+                     <div className="rounded-2xl border border-border bg-muted p-3">
                       <span className="text-[11px] font-semibold tracking-wide text-primary uppercase">
                         🗣️ Local lingo
                       </span>
@@ -274,7 +274,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                   aria-label="Previous card"
                   title="Previous card"
                   onClick={() => goTo(index - 1)}
-                  className="absolute top-1/2 left-1 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-border bg-card/60 text-lg text-muted-foreground backdrop-blur-sm transition hover:bg-card hover:text-foreground"
+                   className="absolute top-1/2 left-1 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-border bg-popover text-lg text-muted-foreground backdrop-blur-sm transition hover:bg-accent hover:text-foreground"
                 >
                   <ChevronLeft aria-hidden="true" />
                 </Button>
@@ -287,7 +287,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                   aria-label="Next card"
                   title="Next card"
                   onClick={() => goTo(index + 1)}
-                  className="absolute top-1/2 right-1 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-border bg-card/60 text-lg text-muted-foreground backdrop-blur-sm transition hover:bg-card hover:text-foreground"
+                   className="absolute top-1/2 right-1 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-border bg-popover text-lg text-muted-foreground backdrop-blur-sm transition hover:bg-accent hover:text-foreground"
                 >
                   <ChevronRight aria-hidden="true" />
                 </Button>
@@ -305,7 +305,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                    className={`h-4 min-w-0 rounded-full p-0 transition-all duration-300 ${
                      index === i
                        ? "w-6 bg-primary shadow-sm"
-                       : "w-2 bg-muted-foreground/30 hover:bg-primary/40"
+                        : "w-2 bg-foreground/20 hover:bg-primary/50"
                   }`}
                  >
                    <span className="block h-1 w-full rounded-full" />
@@ -328,7 +328,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                     <Button
                       type="button"
                       onClick={onSpinAgain}
-                      className="h-12 flex-1 rounded-xl px-4 text-sm font-semibold shadow-glow transition-transform hover:-translate-y-0.5 active:translate-y-0"
+                       className="h-12 flex-1 rounded-xl px-4 text-sm font-semibold shadow-glow transition-transform hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0"
                     >
                       🌀 Spin for a New Vibe
                     </Button>
@@ -336,7 +336,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                       type="button"
                       variant="outline"
                       onClick={() => goTo(0)}
-                      className="h-12 flex-1 rounded-xl border-primary bg-primary/10 px-4 text-sm font-semibold text-primary shadow-sm hover:bg-primary/20"
+                       className="h-12 flex-1 rounded-xl border-glass bg-muted px-4 text-sm font-semibold text-foreground shadow-sm hover:bg-accent"
                     >
                       📜 Relive This Spot
                     </Button>
