@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Suspense, lazy, useCallback, useRef, useState } from "react";
 import InfoDrawer from "@/components/InfoDrawer";
 import type { GlobeHandle } from "@/components/GlobeScene";
+import { Button } from "@/components/ui/button";
 import { getFacts, type Facts } from "@/lib/facts.functions";
 import { loadSpot, type SpotData } from "@/lib/orbis";
 
@@ -104,22 +105,27 @@ function Index() {
       </div>
 
       {/* Centered title & tagline */}
-      <header className="pointer-events-none absolute inset-x-0 top-0 z-40 flex flex-col items-center px-6 pt-10 text-center sm:pt-16">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Orbis</h1>
-        <p className="mt-3 max-w-md text-base text-muted-foreground sm:text-lg">
-          Earth is weird. Let&rsquo;s explore it.
-        </p>
+      <header className="pointer-events-none absolute inset-x-0 top-0 z-40 flex justify-center px-5 pt-6 text-center sm:pt-10">
+        <div className="rounded-[1.75rem] border border-card/80 bg-card/68 px-7 py-4 shadow-glass backdrop-blur-xl sm:px-10 sm:py-5">
+          <h1 className="text-4xl font-bold text-foreground drop-shadow-sm sm:text-5xl">Orbis</h1>
+          <p className="mt-1.5 max-w-md text-sm font-medium text-muted-foreground sm:text-base">
+            Earth is weird. Let&rsquo;s explore it.
+          </p>
+        </div>
       </header>
 
       {/* Floating primary CTA */}
-      <div className="absolute inset-x-0 bottom-8 z-40 flex justify-center px-6">
-        <button
-          onClick={surpriseMe}
-          className="rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-105 active:scale-95 sm:px-10 sm:text-lg"
-        >
-          Find a Destination
-        </button>
-      </div>
+      {!open && (
+        <div className="absolute inset-x-0 bottom-8 z-40 flex justify-center px-6 sm:bottom-10">
+          <Button
+            onClick={surpriseMe}
+            size="lg"
+            className="h-14 rounded-full px-8 text-base font-semibold shadow-glow transition duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] sm:px-10"
+          >
+            Find a Destination
+          </Button>
+        </div>
+      )}
 
       {/* Reticle */}
       <div className="pointer-events-none fixed inset-0 z-10 grid place-items-center">
