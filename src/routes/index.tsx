@@ -115,7 +115,7 @@ function Index() {
       </header>
 
       {/* Floating primary CTA */}
-      {!open && (
+      {!open && !loading && (
         <div className="absolute inset-x-0 bottom-8 z-40 flex justify-center px-6 sm:bottom-10">
           <Button
             onClick={surpriseMe}
