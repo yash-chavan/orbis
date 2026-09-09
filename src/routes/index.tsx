@@ -107,7 +107,7 @@ function Index() {
       {/* Centered title & tagline */}
       <header className="pointer-events-none absolute inset-x-0 top-0 z-40 flex justify-center px-5 pt-6 text-center sm:pt-10">
         <div className="rounded-3xl border border-glass bg-card/76 px-7 py-4 shadow-glass backdrop-blur-glass sm:px-10 sm:py-5">
-          <h1 className="text-4xl font-bold leading-none tracking-tight text-foreground drop-shadow-sm sm:text-5xl">Orbis</h1>
+          <h1 className="text-4xl font-bold leading-none text-foreground drop-shadow-sm sm:text-5xl">Orbis</h1>
           <p className="mt-2 max-w-md text-sm font-medium leading-relaxed text-muted-foreground sm:text-base">
             Earth is weird. Let&rsquo;s explore it.
           </p>

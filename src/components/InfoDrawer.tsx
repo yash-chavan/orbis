@@ -117,7 +117,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
           >
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-5 pt-4">
               <span
-                className={`w-fit rounded-full border border-glass px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${style.chip}`}
+                className={`w-fit rounded-full border border-glass px-2.5 py-1 text-[10px] font-semibold uppercase ${style.chip}`}
               >
                 {style.label}
               </span>
@@ -158,7 +158,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                           initial={{ opacity: 0, x: 6 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: 6 }}
-                           className="rounded-full border border-glass bg-primary/10 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-primary backdrop-blur-glass"
+                           className="rounded-full border border-glass bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary backdrop-blur-glass"
                         >
                           Swipe left ➔
                         </motion.span>
@@ -311,7 +311,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                    <span className="block h-1 w-full rounded-full" />
                  </Button>
               ))}
-               <span className="ml-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+               <span className="ml-2 text-[11px] font-semibold uppercase text-muted-foreground">
                  Card {index + 1} of 3
                </span>
             </div>
