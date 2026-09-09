@@ -103,31 +103,23 @@ function Index() {
         </ClientOnly>
       </div>
 
-      {/* Header pill */}
-      <header className="pointer-events-none absolute inset-x-0 top-0 z-40 flex justify-center p-3 sm:p-5">
-        <div className="pointer-events-auto flex w-full max-w-3xl items-center justify-between gap-3 rounded-full border border-border bg-card/80 px-3 py-2 shadow-glass backdrop-blur-md sm:px-4 sm:py-2.5">
-          <button
-            onClick={resetView}
-            aria-label="Reset Orbis to the home view"
-            className="rounded-full px-2 py-1 text-base font-semibold text-foreground transition-colors hover:bg-primary/10 hover:text-primary sm:text-lg"
-          >
-            <h1>Orbis 🌍</h1>
-          </button>
-          <span
-            className={`hidden rounded-full bg-primary/10 px-3 py-1 text-[11px] font-medium text-primary transition-opacity duration-300 sm:inline ${
-              open ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            🌀 Flick the globe or tap 🎲 Surprise Me
-          </span>
-          <button
-            onClick={surpriseMe}
-            className="rounded-full bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03] sm:text-sm"
-          >
-            🎲 Surprise Me
-          </button>
-        </div>
+      {/* Centered title & tagline */}
+      <header className="pointer-events-none absolute inset-x-0 top-0 z-40 flex flex-col items-center px-6 pt-10 text-center sm:pt-16">
+        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Orbis</h1>
+        <p className="mt-3 max-w-md text-base text-muted-foreground sm:text-lg">
+          Earth is weird. Let&rsquo;s explore it.
+        </p>
       </header>
+
+      {/* Floating primary CTA */}
+      <div className="absolute inset-x-0 bottom-8 z-40 flex justify-center px-6">
+        <button
+          onClick={surpriseMe}
+          className="rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-105 active:scale-95 sm:px-10 sm:text-lg"
+        >
+          Find a Destination
+        </button>
+      </div>
 
       {/* Reticle */}
       <div className="pointer-events-none fixed inset-0 z-10 grid place-items-center">
