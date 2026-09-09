@@ -113,11 +113,11 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
           className="fixed inset-x-0 bottom-0 z-30 px-3 pb-3 sm:px-6 sm:pb-6"
         >
           <div
-            className={`mx-auto w-full max-w-2xl overflow-hidden rounded-[1.75rem] border border-card/80 bg-card/86 shadow-glass ring-1 backdrop-blur-xl ${style.ring}`}
+            className={`mx-auto w-full max-w-2xl overflow-hidden rounded-3xl border border-glass bg-card/86 shadow-glass ring-1 backdrop-blur-glass ${style.ring}`}
           >
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-5 pt-4">
               <span
-                className={`w-fit rounded-full px-3 py-1 text-[11px] font-semibold uppercase ${style.chip}`}
+                className={`w-fit rounded-full border border-glass px-2.5 py-1 text-[10px] font-semibold uppercase ${style.chip}`}
               >
                 {style.label}
               </span>
@@ -131,7 +131,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                 onClick={onSpinAgain}
                 aria-label="Close destination and return home"
                 title="Return home"
-                className="ml-auto h-9 w-9 rounded-full border border-border bg-background/70 text-muted-foreground shadow-sm backdrop-blur-md hover:bg-background hover:text-foreground"
+                 className="ml-auto h-9 w-9 rounded-full border border-glass bg-background/70 text-muted-foreground shadow-sm backdrop-blur-glass hover:bg-background hover:text-foreground"
               >
                 <X aria-hidden="true" />
               </Button>
@@ -158,7 +158,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                           initial={{ opacity: 0, x: 6 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: 6 }}
-                          className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary"
+                           className="rounded-full border border-glass bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary backdrop-blur-glass"
                         >
                           Swipe left ➔
                         </motion.span>
@@ -294,7 +294,7 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
               )}
             </div>
 
-            <div className="flex items-center justify-center gap-2 pb-3">
+             <div className="flex items-center justify-center gap-2 pb-4">
               {[0, 1, 2].map((i) => (
                 <Button
                   key={i}
@@ -302,12 +302,18 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                   variant="ghost"
                   aria-label={`Card ${i + 1} of 3`}
                   onClick={() => goTo(i)}
-                  className={`h-6 min-w-6 rounded-full p-0 transition-all ${
-                    index === i ? "w-6 bg-primary" : "w-2.5 bg-border hover:bg-primary/40"
+                   className={`h-4 min-w-0 rounded-full p-0 transition-all duration-300 ${
+                     index === i
+                       ? "w-6 bg-primary shadow-sm"
+                       : "w-2 bg-muted-foreground/30 hover:bg-primary/40"
                   }`}
-                />
+                 >
+                   <span className="block h-1 w-full rounded-full" />
+                 </Button>
               ))}
-              <span className="ml-2 text-[11px] text-muted-foreground">Card {index + 1} of 3</span>
+               <span className="ml-2 text-[11px] font-semibold uppercase text-muted-foreground">
+                 Card {index + 1} of 3
+               </span>
             </div>
 
             <AnimatePresence>

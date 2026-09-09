@@ -62,9 +62,11 @@
   --color-azure: var(--azure);
   --color-ocean: var(--ocean);
   --color-land: var(--land);
-  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --shadow-glass: 0 20px 50px -20px oklch(0.129 0.042 264.695 / 0.28);
+  --color-glass: var(--glass);
+  --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+  --font-sans: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+  --blur-glass: 20px;
+  --shadow-glass: 0 20px 40px oklch(0 0 0 / 0.15);
   --shadow-glow: 0 0 24px -4px oklch(0.585 0.222 285 / 0.55);
 }
 
@@ -92,6 +94,7 @@
   --azure: oklch(0.52 0.14 245);
   --ocean: oklch(0.945 0.03 232);
   --land: oklch(0.869 0.022 252);
+  --glass: oklch(1 0 0 / 20%);
   --chart-1: oklch(0.585 0.222 285);
   --chart-2: oklch(0.696 0.152 162.48);
   --chart-3: oklch(0.52 0.14 245);
@@ -141,6 +144,7 @@
   --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
+  --glass: oklch(1 0 0 / 20%);
 }
 
 @layer base {
