@@ -101,6 +101,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
     if (!g) return;
     const controls = g.controls() as unknown as {
       autoRotate: boolean;
+      enableRotate: boolean;
       enableDamping: boolean;
       dampingFactor: number;
       dynamicDampingFactor: number;
@@ -177,7 +178,7 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
   const pointsData = beacon ? [beacon] : [];
 
   return (
-    <div className={locked ? "pointer-events-none h-full w-full" : "h-full w-full"}>
+    <div className="pointer-events-none h-full w-full">
       <Globe
         ref={globeRef as never}
         width={size.w}
