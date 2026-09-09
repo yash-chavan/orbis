@@ -1,5 +1,7 @@
 # 🌍 Orbis — Random World Facts on a 3D Globe
 
+🔗[**Try the live App**](https://orbis-sooty.vercel.app/)
+
 Orbis is a web app built by [Yash Chavan](https://www.linkedin.com/in/yash-chavan/) that lets you spin a 3D Earth, land on a random spot, and explore live weather alongside local facts.
 
 I built this project to get hands-on experience orchestrating multiple third-party APIs and using an LLM to generate structured context on the fly. 
