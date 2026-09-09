@@ -1,5 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import type { Facts } from "@/lib/facts.functions";
 import { fmtCoord, flagUrl, titleFor, weatherInfo, type SpotData } from "@/lib/orbis";
 
@@ -111,17 +113,28 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
           className="fixed inset-x-0 bottom-0 z-30 px-3 pb-3 sm:px-6 sm:pb-6"
         >
           <div
-            className={`mx-auto w-full max-w-2xl overflow-hidden rounded-3xl border border-border bg-card/80 shadow-glass ring-1 backdrop-blur-md ${style.ring}`}
+            className={`mx-auto w-full max-w-2xl overflow-hidden rounded-[1.75rem] border border-card/80 bg-card/86 shadow-glass ring-1 backdrop-blur-xl ${style.ring}`}
           >
-            <div className="flex items-center justify-between px-5 pt-4">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-5 pt-4">
               <span
-                className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide uppercase ${style.chip}`}
+                className={`w-fit rounded-full px-3 py-1 text-[11px] font-semibold uppercase ${style.chip}`}
               >
                 {style.label}
               </span>
-              <span className="font-mono text-[11px] text-muted-foreground">
+              <span className="font-mono text-[10px] font-medium text-muted-foreground sm:text-[11px]">
                 {fmtCoord(spot.lat, spot.lng)}
               </span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={onSpinAgain}
+                aria-label="Close destination and return home"
+                title="Return home"
+                className="ml-auto h-9 w-9 rounded-full border border-border bg-background/70 text-muted-foreground shadow-sm backdrop-blur-md hover:bg-background hover:text-foreground"
+              >
+                <X aria-hidden="true" />
+              </Button>
             </div>
 
             <div className="relative">
@@ -180,18 +193,20 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                       {(["C", "F"] as const).map((u) => {
                         const active = (u === "F") === fahrenheit;
                         return (
-                          <button
+                          <Button
                             key={u}
+                            type="button"
+                            variant="ghost"
                             onClick={() => setFahrenheit(u === "F")}
                             aria-pressed={active}
-                            className={`rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors ${
+                            className={`h-7 rounded-full px-2.5 text-[11px] font-semibold transition-all ${
                               active
                                 ? "bg-primary text-primary-foreground shadow-sm"
                                 : "text-muted-foreground hover:text-foreground"
                             }`}
                           >
                             °{u}
-                          </button>
+                          </Button>
                         );
                       })}
                     </div>
@@ -252,32 +267,42 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
               </div>
 
               {index > 0 && (
-                <button
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
                   aria-label="Previous card"
+                  title="Previous card"
                   onClick={() => goTo(index - 1)}
                   className="absolute top-1/2 left-1 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-border bg-card/60 text-lg text-muted-foreground backdrop-blur-sm transition hover:bg-card hover:text-foreground"
                 >
-                  ‹
-                </button>
+                  <ChevronLeft aria-hidden="true" />
+                </Button>
               )}
               {index < 2 && (
-                <button
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
                   aria-label="Next card"
+                  title="Next card"
                   onClick={() => goTo(index + 1)}
                   className="absolute top-1/2 right-1 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-border bg-card/60 text-lg text-muted-foreground backdrop-blur-sm transition hover:bg-card hover:text-foreground"
                 >
-                  ›
-                </button>
+                  <ChevronRight aria-hidden="true" />
+                </Button>
               )}
             </div>
 
             <div className="flex items-center justify-center gap-2 pb-3">
               {[0, 1, 2].map((i) => (
-                <button
+                <Button
                   key={i}
+                  type="button"
+                  variant="ghost"
                   aria-label={`Card ${i + 1} of 3`}
                   onClick={() => goTo(i)}
-                  className={`h-2.5 rounded-full transition-all ${
+                  className={`h-6 min-w-6 rounded-full p-0 transition-all ${
                     index === i ? "w-6 bg-primary" : "w-2.5 bg-border hover:bg-primary/40"
                   }`}
                 />
@@ -294,18 +319,21 @@ export default function InfoDrawer({ open, spot, facts, loading, onSpinAgain }: 
                   className="overflow-hidden border-t border-border"
                 >
                   <div className="flex flex-col gap-2 p-4 sm:flex-row">
-                    <button
+                    <Button
+                      type="button"
                       onClick={onSpinAgain}
-                      className="flex-1 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.01]"
+                      className="h-12 flex-1 rounded-xl px-4 text-sm font-semibold shadow-glow transition-transform hover:-translate-y-0.5 active:translate-y-0"
                     >
                       🌀 Spin for a New Vibe
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
                       onClick={() => goTo(0)}
-                      className="flex-1 rounded-xl border-2 border-primary bg-primary/10 px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+                      className="h-12 flex-1 rounded-xl border-primary bg-primary/10 px-4 text-sm font-semibold text-primary shadow-sm hover:bg-primary/20"
                     >
                       📜 Relive This Spot
-                    </button>
+                    </Button>
                   </div>
                 </motion.div>
               )}
