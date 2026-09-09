@@ -90,9 +90,9 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
   useEffect(() => {
     const g = globeRef.current;
     if (!g) return;
-    const c = g.controls() as unknown as { enableRotate: boolean; enableZoom: boolean };
-    c.enableRotate = !locked;
-    c.enableZoom = !locked;
+      const c = g.controls() as unknown as { enableRotate: boolean; enableZoom: boolean };
+      c.enableRotate = false;
+      c.enableZoom = false;
   }, [locked, size.w]);
 
   // Configure controls + detect motion settling
@@ -107,12 +107,14 @@ const GlobeScene = forwardRef<GlobeHandle, Props>(function GlobeScene(
       enableZoom: boolean;
       rotateSpeed: number;
     };
-    controls.autoRotate = false;
+    controls.autoRotate = true;
+    (controls as { autoRotateSpeed?: number }).autoRotateSpeed = 0.15;
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.dynamicDampingFactor = 0.12;
-    controls.enableZoom = true;
+    controls.enableZoom = false;
     controls.rotateSpeed = 0.9;
+    controls.enableRotate = false;
 
     let last = g.pointOfView();
     let lastT = performance.now();
